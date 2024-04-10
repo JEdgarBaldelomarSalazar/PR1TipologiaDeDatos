@@ -1,0 +1,34 @@
+# Dependencies
+*.egg-info/
+env/
+.venv/
+venv/
+dist/
+build/
+lib/site-packages/
+
+# Logs
+*.log
+*.log.*
+
+# Temporary Files
+*.pyc
+*.pyo
+__pycache__/
+
+# IDE/Editor Specific
+.idea/
+.vscode/
+.spyderproject/
+
+# Coverage Reports
+.coverage
+htmlcov/
+.coverage.*
+
+# Drafts
+*.ipynb_checkpoints
+
+# Tests (uncomment if using a testing framework)
+# .pytest_cache/
+# test_*.py
