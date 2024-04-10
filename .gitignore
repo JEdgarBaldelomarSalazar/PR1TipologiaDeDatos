@@ -26,6 +26,8 @@ __pycache__/
 htmlcov/
 .coverage.*
 
+.DS_store
+
 # Drafts
 *.ipynb_checkpoints
 
