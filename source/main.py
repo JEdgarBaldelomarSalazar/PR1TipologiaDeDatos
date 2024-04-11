@@ -4,11 +4,10 @@ from selenium.webdriver.chrome.options import Options
 from ProcessPage import ProcessPage
 import pandas as pd
 def main() -> int:
-    materiales = ['Aluminio']#, 'Materiales bituminosos', 'Cemento', 'Energía', 'Focos y luminarias', 'Focos y luminarias', 'Madera', 'Productos plásticos', 'Productos quimicos', 'Aridos y rocas', 'Materiales siderúrgicos', 'Materiales electrónicos', 'Cobre', 'Vidrio', 'Materiales explosivos']
     driver = get_web_driver()
     url = "https://www.ine.es/jaxiT3/Tabla.htm?t=8381&L=0"
     process_page = ProcessPage(driver, url)
-    process_page.process_page(materiales)
+    process_page.process_page()
     driver.close()
     return 0
 
