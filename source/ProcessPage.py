@@ -1,9 +1,9 @@
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.wait import WebDriverWait
-from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver import ActionChains
-from constants import *
+from Constants import *
 class ProcessPage:
 
     def __init__(self, webdriver):
@@ -14,10 +14,8 @@ class ProcessPage:
 
     def process_page(self) -> None:
         self.get_materiales()
+        self.hide_cookies_div()
         self.select_option()
-    def pre_scraping(self):
-        #read robots txt
-        return 0
 
     def get_materiales(self):
         self.webdriver.implicitly_wait(2)
@@ -32,6 +30,12 @@ class ProcessPage:
         except NoSuchElementException:
             print("Element not found")
 
+    def hide_cookies_div(self):
+        try:
+            self.webdriver.execute_script(f"document.getElementById('{div_cookies_id}').style.display = 'none';")
+        except Exception as e:
+            print(f'Accept cookies btn not found: {e}')
+
     def select_option(self):
         try:
             select_element = self.webdriver.find_element(By.XPATH, self.root_xpath)
@@ -44,7 +48,7 @@ class ProcessPage:
                 button = self.webdriver.find_element(By.ID, btn_cosultar_seleccion_id)
                 button.click()
                 content = WebDriverWait(self.webdriver, 5).until(
-                    expected_conditions.presence_of_element_located((By.CLASS_NAME, 'sd')))
+                    EC.presence_of_element_located((By.CLASS_NAME, 'sd')))
                 print(content.text)
         except NoSuchElementException as e:
             print(f'Element not found {e}')

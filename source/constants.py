@@ -1,1 +1,0 @@
-btn_cosultar_seleccion_id = "botonConsulSele"
