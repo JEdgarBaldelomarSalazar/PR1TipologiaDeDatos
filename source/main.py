@@ -2,11 +2,13 @@ import sys
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from ProcessPage import ProcessPage
+from GetRobotsFile import GetRobotsFile
 import pandas as pd
 def main() -> int:
-    driver = get_web_driver()
-    url = "https://www.ine.es/jaxiT3/Tabla.htm?t=8381&L=0"
-    process_page = ProcessPage(driver, url)
+    #driver = get_web_driver()
+    robotsFiles = GetRobotsFile()
+    robotsFiles.get_robots_file()
+    process_page = ProcessPage(driver)
     process_page.process_page()
     driver.close()
     return 0

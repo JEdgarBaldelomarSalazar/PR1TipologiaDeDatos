@@ -6,17 +6,21 @@ from selenium.webdriver import ActionChains
 from constants import *
 class ProcessPage:
 
-    def __init__(self, webdriver, url):
+    def __init__(self, webdriver):
         self.webdriver = webdriver
-        self.url = url
+        self.url = "https://www.ine.es/jaxiT3/Tabla.htm?t=8381"
         self.materiales = {}
         self.root_xpath = f'//select[@class="cajaVariables jax_SELECT"]'
 
     def process_page(self) -> None:
         self.get_materiales()
         self.select_option()
+    def pre_scraping(self):
+        #read robots txt
+        return 0
 
     def get_materiales(self):
+        self.webdriver.implicitly_wait(2)
         self.webdriver.get(self.url)
         try:
             select_element = self.webdriver.find_element(By.XPATH, self.root_xpath)
