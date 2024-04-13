@@ -42,6 +42,10 @@ class ProcessPage:
             print(f'Accept cookies btn not found: {e}')
 
     def select_option(self):
+        max_attemps = 3
+        attemps = 0
+        element_found = False
+
         try:
             select_element = self.webdriver.find_element(By.XPATH, self.root_xpath)
             select = Select(select_element)
@@ -51,16 +55,16 @@ class ProcessPage:
                 ActionChains(self.webdriver).scroll_to_element(iframe).perform()
                 button = self.webdriver.find_element(By.ID, btn_cosultar_seleccion_id)
                 button.click()
-                table_element = WebDriverWait(self.webdriver, 15).until(
-                    EC.presence_of_element_located((By.XPATH, "//table[@id='tablaDatos']"))
-                )
-                td_element = table_element.find_element(By.XPATH, ".//td[@class='sd']")
-                td_element.click()
+                while attemps < max_attemps and not element_found:
+                    td_element = WebDriverWait(self.webdriver, 15).until(
+                        EC.presence_of_element_located((By.XPATH, ".//table[@id='tablaDatos']//td[@class='sd']")))
+                    td_element.click()
+                    element_found = True
+
 
         except StaleElementReferenceException:
+            attemps += 1
             time.sleep(1)
-            td_element = WebDriverWait(self.webdriver, 15).until(EC.presence_of_element_located((By.XPATH, ".//table[@id='tablaDatos']//td[@class='sd']")))
-            td_element.click()
         except NoSuchElementException as e:
             print(f'Element not found {e}')
         finally:
