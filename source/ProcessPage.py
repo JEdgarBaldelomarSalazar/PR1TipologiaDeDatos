@@ -44,32 +44,35 @@ class ProcessPage:
 
     def select_option(self):
         max_attemps = 3
-        attemps = 0
+        attempts = 0
         element_found = False
-
         try:
-            select_element = self.webdriver.find_element(By.XPATH, self.root_xpath)
-            select = Select(select_element)
             for key in self.materiales:
+                select_element = self.webdriver.find_element(By.XPATH, self.root_xpath)
+                select = Select(select_element)
                 select.select_by_value(key)
+                time.sleep(1)
                 iframe = self.webdriver.find_element(By.ID, btn_cosultar_seleccion_id)
                 ActionChains(self.webdriver).scroll_to_element(iframe).perform()
                 button = self.webdriver.find_element(By.ID, btn_cosultar_seleccion_id)
                 button.click()
-                while attemps < max_attemps and not element_found:
+                time.sleep(1)
+                while attempts < max_attemps and not element_found:
                     td_element = WebDriverWait(self.webdriver, 15).until(
                         EC.presence_of_element_located((By.XPATH, ".//table[@id='tablaDatos']//td[@class='sd']")))
                     td_element.click()
                     element_found = True
-
+                time.sleep(1)
                 grid_btn = self.webdriver.find_element(By.XPATH, "//div[@id='tooltipWindow']//a[@class='icosTabla flotaderecha']")
                 href_link = grid_btn.get_attribute("href")
                 self.data_links[key] = href_link
-                self.webdriver.implicitly_wait(10)
-
-
+                self.webdriver.implicitly_wait(2)
+                self.webdriver.get(self.url)
+                time.sleep(10)
+                self.hide_cookies_div()
+            print(self.data_links)
         except StaleElementReferenceException:
-            attemps += 1
+            attempts += 1
             time.sleep(1)
         except NoSuchElementException as e:
             print(f'Element not found {e}')
