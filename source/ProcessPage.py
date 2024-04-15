@@ -16,6 +16,7 @@ class ProcessPage:
         self.url = "https://www.ine.es/jaxiT3/Tabla.htm?t=8381"
         self.materiales = {}
         self.root_xpath = f'//select[@class="cajaVariables jax_SELECT"]'
+        self.data_links = {}
 
     def process_page(self) -> None:
         self.get_materiales()
@@ -60,6 +61,11 @@ class ProcessPage:
                         EC.presence_of_element_located((By.XPATH, ".//table[@id='tablaDatos']//td[@class='sd']")))
                     td_element.click()
                     element_found = True
+
+                grid_btn = self.webdriver.find_element(By.XPATH, "//div[@id='tooltipWindow']//a[@class='icosTabla flotaderecha']")
+                href_link = grid_btn.get_attribute("href")
+                self.data_links[key] = href_link
+                self.webdriver.implicitly_wait(10)
 
 
         except StaleElementReferenceException:
