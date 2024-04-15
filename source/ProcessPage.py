@@ -49,6 +49,9 @@ class ProcessPage:
             for key in self.materiales:
                 element_found = False
                 self.hide_cookies_div()
+                if key != 'Aluminio':
+                    disable_element = self.webdriver.find_element(By.XPATH, "//option[@value='414687']")
+                    self.webdriver.execute_script("arguments[0].removeAttribute('selected')", disable_element)
                 select_element = self.webdriver.find_element(By.XPATH, self.root_xpath)
                 select = Select(select_element)
                 select.select_by_value(key)
@@ -66,7 +69,7 @@ class ProcessPage:
                 time.sleep(1)
                 grid_btn = self.webdriver.find_element(By.XPATH, "//div[@id='tooltipWindow']//a[@class='icosTabla flotaderecha']")
                 href_link = grid_btn.get_attribute("href")
-                self.data_links[key] = href_link
+                self.data_links[self.materiales[key]] = href_link
                 self.webdriver.implicitly_wait(2)
                 self.webdriver.get(self.url)
                 time.sleep(10)
