@@ -12,7 +12,6 @@ def main() -> int:
     robotsFiles.get_robots_file()
     process_page = ProcessPage(driver)
     process_page.process_page()
-    driver.close()
     return 0
 
 

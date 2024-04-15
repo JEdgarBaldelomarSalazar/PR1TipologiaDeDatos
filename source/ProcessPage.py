@@ -73,7 +73,7 @@ class ProcessPage:
                 self.webdriver.implicitly_wait(2)
                 self.webdriver.get(self.url)
                 time.sleep(10)
-            print(self.data_links)
+            self.webdriver.close()
         except StaleElementReferenceException:
             attempts += 1
             time.sleep(1)
