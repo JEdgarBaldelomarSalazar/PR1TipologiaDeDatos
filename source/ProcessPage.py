@@ -9,6 +9,7 @@ from selenium.webdriver import ActionChains
 from selenium.common.exceptions import StaleElementReferenceException
 from Constants import *
 
+
 class ProcessPage:
 
     def __init__(self, webdriver):
@@ -20,7 +21,6 @@ class ProcessPage:
 
     def process_page(self) -> None:
         self.get_materiales()
-        self.hide_cookies_div()
         self.select_option()
 
     def get_materiales(self):
@@ -45,9 +45,10 @@ class ProcessPage:
     def select_option(self):
         max_attemps = 3
         attempts = 0
-        element_found = False
         try:
             for key in self.materiales:
+                element_found = False
+                self.hide_cookies_div()
                 select_element = self.webdriver.find_element(By.XPATH, self.root_xpath)
                 select = Select(select_element)
                 select.select_by_value(key)
@@ -69,7 +70,6 @@ class ProcessPage:
                 self.webdriver.implicitly_wait(2)
                 self.webdriver.get(self.url)
                 time.sleep(10)
-                self.hide_cookies_div()
             print(self.data_links)
         except StaleElementReferenceException:
             attempts += 1
