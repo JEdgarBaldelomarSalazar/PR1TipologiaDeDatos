@@ -56,11 +56,13 @@ class ProcessPage:
         attempts = 0
         driver = Driver()
         web_driver = driver.get_web_driver()
+        web_driver.get(self.url)
         try:
             for key in self.materiales:
                 element_found = False
                 self.hide_cookies_div(web_driver)
                 if key != 'Aluminio':
+                    web_driver.implicitly_wait(2)
                     disable_element = web_driver.find_element(By.XPATH, "//option[@value='414687']")
                     web_driver.execute_script("arguments[0].removeAttribute('selected')", disable_element)
                 select_element = web_driver.find_element(By.XPATH, self.root_xpath)
@@ -85,8 +87,8 @@ class ProcessPage:
                 web_driver.implicitly_wait(2)
                 web_driver.get(self.url)
                 time.sleep(10)
-                web_driver.close()
-                web_driver.quit()
+            web_driver.close()
+            web_driver.quit()
         except StaleElementReferenceException:
             attempts += 1
             time.sleep(1)
