@@ -13,19 +13,28 @@ from Driver import Driver
 
 
 class ProcessPage:
+    """Clase que representa el responsable de procesar una página web"""
 
     def __init__(self):
+        """Constructor que nnicializa propiedades de la clase que se usarán"""
         self.url = "https://www.ine.es/jaxiT3/Tabla.htm?t=8381"
         self.materiales = {}
-        self.root_xpath = f'//select[@class="cajaVariables jax_SELECT"]'
+        self.root_xpath = f'//select[@class="cajaVariables jax_SELECT"]'#Xpath para buscar en la página la sección select
         self.data_links = {}
 
     def process_page(self) -> None:
+        """Llama a los métodos que procesan la página web"""
         self.get_materiales()
         self.select_option()
         self.process_data()
 
     def get_materiales(self):
+        """
+            Este método de las opciones del desplegable procesa cada una
+
+            Navega a la página web, selecciona cada material
+            disponible en el menú desplegable, procesa cada opcion y guarda el value y el texto del tag
+        """
         driver = Driver()
         web_driver = driver.get_web_driver()
         web_driver.implicitly_wait(2)
@@ -45,6 +54,11 @@ class ProcessPage:
             web_driver.quit()
 
     def hide_cookies_div(self, web_driver):
+        """
+            Dado el driver ejecuta un script para que obtener del DOM un elemento el el ID: div_cookies_id para no mostarlo
+            :param web_driver:
+            :return: None
+        """
         try:
             web_driver.implicitly_wait(3)
             web_driver.execute_script(f"document.getElementById('{div_cookies_id}').style.display = 'none';")
@@ -52,6 +66,19 @@ class ProcessPage:
             print(f'Accept cookies btn not found: {e}')
 
     def select_option(self):
+        """
+            Este método instancia un driver con la página web.
+
+            Por cada opción, cerramos el div de cookies y verificamos que el valor de la opción no sea "Aluminio".
+            En caso de serlo, la deshabilitamos con JavaScript.
+            Luego de seleccionar la opción, hacemos scroll y buscamos el botón de submit.
+            En la siguiente página, indicamos que espere hasta la presencia del elemento
+            .//table[@id='tablaDatos']//td[@class='sd'] para obtener su atributo href.
+            Guardamos, para cada clave, su href.
+            Al finalizar las opciones, cerramos el webdriver y salimos.
+            :return:
+            - None
+        """
         max_attemps = 3
         attempts = 0
         driver = Driver()
@@ -96,6 +123,19 @@ class ProcessPage:
             print(f'Element not found {e}')
 
     def get_data_table(self, link) -> {}:
+        """
+            Este método instancia un driver con el enlace proporcionado.
+
+            Busca la opción con el valor 15 para deshabilitarla con JavaScript.
+            Luego, busca todas las opciones y las selecciona todas, identificadas con el valor 0.
+            Posteriormente, busca el botón "Ir" y hace clic para procesar la tabla con los índices.
+            Por cada fila, procesa cada celda, pero solo se almacenan los datos de las dos primeras celdas,
+            las demás se omiten.
+            Finalmente, cierra el webdriver y sale.
+
+            :param link: El enlace de la página web de la cual se extraerán los datos de la tabla.
+            :return: None
+        """
         data = []
         driver = Driver()
         web_driver = driver.get_web_driver()
@@ -131,24 +171,13 @@ class ProcessPage:
             print(f'Element not found {e}')
 
     def process_data(self):
-        #used for testing
-        """links = {
-            "Aluminio": "https://www.ine.es/consul/serie.do?d=true&s=IMM32",
-            "Materiales bituminosos": "https://www.ine.es/consul/serie.do?d=true&s=IMM55",
-            "Cemento": "https://www.ine.es/consul/serie.do?d=true&s=IMM30",
-            "Energía": "https://www.ine.es/consul/serie.do?d=true&s=IMM29",
-            "Focos y luminarias": "https://www.ine.es/consul/serie.do?d=true&s=IMM28",
-            "Materiales cerámicos": "https://www.ine.es/consul/serie.do?d=true&s=IMM27",
-            "Madera": "https://www.ine.es/consul/serie.do?d=true&s=IMM26",
-            "Productos plásticos": "https://www.ine.es/consul/serie.do?d=true&s=IMM25",
-            "Productos quimicos": "https://www.ine.es/consul/serie.do?d=true&s=IMM24",
-            "Aridos y rocas": "https://www.ine.es/consul/serie.do?d=true&s=IMM23",
-            "Materiales siderúrgicos": "https://www.ine.es/consul/serie.do?d=true&s=IMM54",
-            "Materiales electrónicos": "https://www.ine.es/consul/serie.do?d=true&s=IMM21",
-            "Cobre": "https://www.ine.es/consul/serie.do?d=true&s=IMM20",
-            "Vidrio": "https://www.ine.es/consul/serie.do?d=true&s=IMM19",
-            "Materiales explosivos": "https://www.ine.es/consul/serie.do?d=true&s=IMM18"
-        }"""
+        """
+            Instancia un objeto para exportar los datos a un archivo CSV.
+            Para cada enlace en self.data_links, se llama al método get_data_table para obtener la información de la tabla.
+            La información obtenida se pasa como parámetro al método export_csv para ser exportada a un archivo CSV.
+
+            :return: None
+        """
         save_data = CreateDataSet()
         try:
             for key, link in self.data_links.items():

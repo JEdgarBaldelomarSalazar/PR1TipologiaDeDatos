@@ -6,6 +6,13 @@ class CreateDataSet:
         self.csv_extension = '.csv'
 
     def export_csv(self, filename, content) -> None:
+        """
+            Exporta los datos proporcionados a un archivo CSV.
+
+            :param filename: El nombre del archivo CSV que se va a crear, en nuestro caso el nombre de material.
+            :param content: Los datos que se van a exportar al archivo CSV.
+            :return: None
+        """
         data = {}
         table_data = content[1:]
         try:

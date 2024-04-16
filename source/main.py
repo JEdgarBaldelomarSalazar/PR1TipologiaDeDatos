@@ -4,6 +4,10 @@ from GetRobotsFile import GetRobotsFile
 
 
 def main() -> int:
+    """
+    Punto de entrada de la aplicación, llama a la clase GetRobotsFile y ProcessPage
+    :return: 0
+    """
     robot_files = GetRobotsFile()
     robot_files.get_robots_file()
     process_page = ProcessPage()
