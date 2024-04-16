@@ -21,8 +21,8 @@ class ProcessPage:
         self.data_links = {}
 
     def process_page(self) -> None:
-        # self.get_materiales()
-        # self.select_option()
+        self.get_materiales()
+        self.select_option()
         self.process_data()
 
     def get_materiales(self):
@@ -106,7 +106,7 @@ class ProcessPage:
             web_driver.implicitly_wait(1)
             select_form = web_driver.find_element(By.XPATH, "//div[@id='a']//select[@class='menuSelect']")
             select = Select(select_form)
-            select.select_by_value("100")
+            select.select_by_value("0")#option value todos es 0
             web_driver.implicitly_wait(1)
             submit_btn = web_driver.find_element(By.XPATH, "//div[@id='a']//input[@class='botonIr']")
             submit_btn.click()
@@ -129,7 +129,8 @@ class ProcessPage:
             print(f'Element not found {e}')
 
     def process_data(self):
-        links = {
+        #used for testing
+        """links = {
             "Aluminio": "https://www.ine.es/consul/serie.do?d=true&s=IMM32",
             "Materiales bituminosos": "https://www.ine.es/consul/serie.do?d=true&s=IMM55",
             "Cemento": "https://www.ine.es/consul/serie.do?d=true&s=IMM30",
@@ -145,10 +146,10 @@ class ProcessPage:
             "Cobre": "https://www.ine.es/consul/serie.do?d=true&s=IMM20",
             "Vidrio": "https://www.ine.es/consul/serie.do?d=true&s=IMM19",
             "Materiales explosivos": "https://www.ine.es/consul/serie.do?d=true&s=IMM18"
-        }
+        }"""
         save_data = CreateDataSet()
         try:
-            for key, link in links.items():
+            for key, link in self.data_links.items():
                 content = self.get_data_table(link)
                 save_data.export_csv(key, content)
         except Exception as e:
